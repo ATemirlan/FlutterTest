@@ -11,19 +11,15 @@ class PlayersPage extends StatefulWidget {
   _PlayersPageState createState() => _PlayersPageState();
 }
 
-class _PlayersPageState extends State<PlayersPage> {
-  PageController pageController;
-  int initialIndex = 0;
-  List<Player> basketballPlayers = [];
-  List<Player> hockeyPlayers = [];
+class _PlayersPageState extends State<PlayersPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController(
-      keepPage: true,
-      initialPage: initialIndex,
-    );
+    BlocProvider.of<PlayersBloc>(context).add(LoadPlayers());
   }
 
   @override
@@ -38,25 +34,18 @@ class _PlayersPageState extends State<PlayersPage> {
   }
 
   Widget _body(PlayersState state) {
-    if (state is PlayersLoaded) {
-      basketballPlayers = state.basketballPlayers;
-      hockeyPlayers = state.hockeyPlayers;
-    }
+    print(state.index);
 
-    if (state is PlayersIndexChanged) {
-      PageController(keepPage: true, initialPage: initialIndex);
-      initialIndex = state.index;
-    }
-
-    return initialIndex == 0
-        ? _dataLoadedBody(basketballPlayers)
-        : _dataLoadedBody(hockeyPlayers);
+    return state.index == 0
+        ? _dataLoadedBody(state.basketballPlayers)
+        : _dataLoadedBody(state.hockeyPlayers);
   }
 
   Widget _dataLoadedBody(List<Player> players) {
     return Container(
       color: Colors.white,
       child: ListView.builder(
+        padding: EdgeInsets.only(top: 44, bottom: 44),
         itemCount: players.length,
         itemBuilder: (context, index) {
           final player = players[index];

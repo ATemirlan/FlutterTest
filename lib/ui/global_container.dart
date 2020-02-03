@@ -51,8 +51,10 @@ class _GlobalContainerState extends State<GlobalContainer>
   }
 
   _startAddEntitiesRandomly() {
-    timer = Timer.periodic(Duration(seconds: getRandomNumber(1, 6)),
-        (Timer t) => BlocProvider.of<HomeBloc>(context).add(StartAddingData()));
+    if (timer == null) {
+      timer = Timer.periodic(Duration(seconds: getRandomNumber(1, 6)),
+          (t) => BlocProvider.of<HomeBloc>(context).add(StartAddingData()));
+    }
   }
 
   _setupTab() {
@@ -81,7 +83,8 @@ class _GlobalContainerState extends State<GlobalContainer>
       ),
       BlocProvider(
         child: PlayersPage(),
-        create: (_) => PlayersBloc(BlocProvider.of<HomeBloc>(context)),
+        create: (_) =>
+            PlayersBloc(BlocProvider.of<HomeBloc>(context))..add(LoadPlayers()),
       ),
       BlocProvider(
         child: MessagesPage(),
@@ -181,9 +184,10 @@ class _GlobalContainerState extends State<GlobalContainer>
                 title: 'Basketball',
                 isSelected: selectedIndex == 0,
                 onPressed: () {
-                  setState(() {selectedIndex = 0;});
+                  selectedIndex = 0;
                   BlocProvider.of<HomeBloc>(context)
                       .add(ChangeIndexFromHome(0));
+                  setState(() {});
                 },
               ),
             ),
@@ -192,9 +196,10 @@ class _GlobalContainerState extends State<GlobalContainer>
                 title: 'Hockey',
                 isSelected: selectedIndex == 1,
                 onPressed: () {
-                  setState(() {selectedIndex = 1;});
+                  selectedIndex = 1;
                   BlocProvider.of<HomeBloc>(context)
                       .add(ChangeIndexFromHome(1));
+                  setState(() {});
                 },
               ),
             ),
@@ -204,7 +209,8 @@ class _GlobalContainerState extends State<GlobalContainer>
     );
   }
 
-  Widget _playersHeaderButton({String title, bool isSelected, Function onPressed}) {
+  Widget _playersHeaderButton(
+      {String title, bool isSelected, Function onPressed}) {
     return FlatButton(
       color: isSelected ? Colors.green : Colors.white,
       onPressed: onPressed,

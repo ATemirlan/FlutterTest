@@ -3,7 +3,9 @@ part of 'messages_bloc.dart';
 @immutable
 abstract class MessagesEvent {}
 
-class MessagesLoad extends MessagesEvent {
+class UpdateMessages extends MessagesEvent {
   final List<Message> messages;
-  MessagesLoad(this.messages);
+  UpdateMessages(this.messages);
 }
+
+class LoadMessages extends MessagesEvent {}

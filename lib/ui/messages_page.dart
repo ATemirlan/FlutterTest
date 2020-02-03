@@ -11,7 +11,17 @@ class MessagesPage extends StatefulWidget {
   _MessagesPageState createState() => _MessagesPageState();
 }
 
-class _MessagesPageState extends State<MessagesPage> {
+class _MessagesPageState extends State<MessagesPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+@override
+  void initState() {
+    super.initState();
+    BlocProvider.of<MessagesBloc>(context).add(LoadMessages());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MessagesBloc, MessagesState>(
@@ -30,6 +40,7 @@ class _MessagesPageState extends State<MessagesPage> {
     return Container(
       color: Colors.white,
       child: ListView.builder(
+        padding: EdgeInsets.only(top: 44, bottom: 44),
         itemCount: messages.length,
         itemBuilder: (context, index) {
           final message = messages[index];
@@ -37,7 +48,8 @@ class _MessagesPageState extends State<MessagesPage> {
             key: Key(message.player.name + message.message),
             onVisibilityChanged: (VisibilityInfo info) {
               if (info.visibleFraction > 0.2 && message.unread) {
-                BlocProvider.of<HomeBloc>(context).add(MarkMessageAsRead(message));
+                BlocProvider.of<HomeBloc>(context)
+                    .add(MarkMessageAsRead(message));
               }
             },
             child: MessageContainer(message),

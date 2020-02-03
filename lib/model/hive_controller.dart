@@ -42,7 +42,6 @@ class HiveController {
     var p = playersBox.get(player.key);
 
     if (p is Player) {
-      print('unread player');
       p.unread = false;
       p.save();
     }
@@ -53,7 +52,6 @@ class HiveController {
     var m = messagesBox.get(message.key);
 
     if (m is Message) {
-      print('unread message');
       m.unread = false;
       m.save();
     }
@@ -144,8 +142,7 @@ class HiveController {
     player.type = PlayerTypes.hockey;
     player.isLeftAlign = Random().nextBool();
 
-    player.color = (Random().nextDouble() * 0xFFFFFF).toInt() <<
-        0; //Color().withOpacity(1.0)
+    player.color = (Random().nextDouble() * 0xFFFFFF).toInt() << 0;
 
     return player;
   }

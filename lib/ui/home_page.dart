@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'package:flutter_test_task/model/hive_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test_task/bloc/home/home_bloc.dart';
+import 'package:flutter_test_task/model/message.dart';
+import 'package:flutter_test_task/model/player.dart';
 
 class HomePage extends StatefulWidget {
   final Function toBasketballPlayers;
@@ -19,7 +19,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  int unreadBasketballPlayers = 0;
+  int unreadHockeyPlayers = 0;
+  int unreadMessages = 0;
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -30,12 +38,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body(HomeState state) {
-    print(state);
-    if (state is DataLoaded) return _dataLoadedBody(state);
-    return Container();
-  }
+    if (state is DataLoaded) {
+      unreadBasketballPlayers = state.unreadBasketballPlayers;
+      unreadHockeyPlayers = state.unreadHockeyPlayers;
+      unreadMessages = state.unreadMessages;
+    }
 
-  Widget _dataLoadedBody(DataLoaded state) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -44,15 +52,13 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _circleButton(
               icon: Image.asset('assets/basketball.png'),
-              badge: state.unreadBasketballPlayers,
-              onTap: () {
-                widget.toBasketballPlayers();
-              },
+              badge: unreadBasketballPlayers,
+              onTap: () => widget.toBasketballPlayers(),
             ),
             SizedBox(width: 16.0),
             _circleButton(
               icon: Image.asset('assets/hockey.png'),
-              badge: state.unreadHockeyPlayers,
+              badge: unreadHockeyPlayers,
               onTap: () => widget.toHockeyPlayers(),
             ),
           ],
@@ -60,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         SizedBox(height: 16.0),
         _circleButton(
           icon: Icon(Icons.message),
-          badge: state.unreadMessages,
+          badge: unreadMessages,
           onTap: () => widget.toMessages(),
         ),
       ],
