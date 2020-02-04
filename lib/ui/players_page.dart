@@ -34,8 +34,6 @@ class _PlayersPageState extends State<PlayersPage>
   }
 
   Widget _body(PlayersState state) {
-    print(state.index);
-
     return state.index == 0
         ? _dataLoadedBody(state.basketballPlayers)
         : _dataLoadedBody(state.hockeyPlayers);

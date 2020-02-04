@@ -16,7 +16,6 @@ class PlayersState {
     List<Player> hockeyPlayers,
     int index,
   }) {
-    print('$index  ${this.index}');
     return PlayersState(
       basketballPlayers: basketballPlayers ?? this.basketballPlayers,
       hockeyPlayers: hockeyPlayers ?? this.hockeyPlayers,
